@@ -152,6 +152,4 @@ project_root/
 └── start_app.sh         # Convenience script to start the application
 ```
 
-## License
 
-[MIT License](LICENSE)
