@@ -87,6 +87,22 @@ npm start
 
 The frontend will be available at http://localhost:3000
 
+### Authentication
+
+The application currently uses a mock authentication system for development purposes. Use the following credentials to log in:
+
+#### Admin User Credentials
+- Email: `admin@datareplicator.com` / Password: `admin123`
+- Email: `admin` / Password: `password`
+
+Admin users have full access to all features, including the Admin UI at http://localhost:3000/admin
+
+#### Regular User Credentials
+- Email: `user@datareplicator.com` / Password: `user123`
+- Email: `dev` / Password: `dev` (developer role)
+
+Regular users have limited permissions and cannot access the Admin UI.
+
 ## Project Structure
 
 ```
