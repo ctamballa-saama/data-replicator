@@ -107,24 +107,49 @@ Regular users have limited permissions and cannot access the Admin UI.
 
 ```
 project_root/
-├── datareplicator/       # Python package for data replication
-│   ├── core/            # Core functionality and utilities
-│   ├── ingestion/       # Data ingestion and processing
-│   ├── analysis/        # Statistical analysis
-│   │   └── relationships/ # Relationship detection and analysis
-│   ├── generation/      # Synthetic data generation
-│   │   └── utils/       # Generation utilities
-│   ├── domain_registry/ # Domain management
-│   └── api/             # FastAPI backend application
-├── frontend/           # React frontend application
-│   ├── public/          # Static assets
-│   └── src/             # React source code
-│       ├── components/  # Reusable UI components
-│       ├── pages/       # Application pages
-│       └── services/    # API service modules
-├── tests/              # Test suite
-├── logs/               # Application logs
-└── start_app.sh        # Convenience script to start the application
+├── datareplicator/        # Python package for data replication
+│   ├── api/              # FastAPI backend application
+│   ├── analysis/         # Statistical analysis
+│   │   ├── relationships/ # Relationship detection and analysis
+│   │   └── statistics/   # Statistical calculation services
+│   ├── config/           # Configuration settings
+│   ├── core/             # Core functionality and utilities
+│   │   └── config/       # Core configuration
+│   ├── data/             # Data models and processing
+│   │   ├── domain/       # Domain-specific data handling
+│   │   ├── ingestion/    # Data ingestion processing
+│   │   └── parsing/      # Data parsing utilities
+│   ├── db/               # Database models and connections
+│   │   └── models/       # Database models
+│   ├── domain_registry/  # Domain management
+│   ├── export/           # Data export functionality
+│   ├── generation/       # Synthetic data generation
+│   │   ├── generators/   # Data generator implementations
+│   │   ├── models/       # Generation models
+│   │   └── utils/        # Generation utilities
+│   ├── ingestion/        # Data ingestion services
+│   ├── ui/               # Backend UI components
+│   └── validation/       # Data validation services
+├── frontend/            # React frontend application
+│   ├── build/            # Production build output
+│   ├── public/           # Static assets
+│   └── src/              # React source code
+│       ├── components/   # Reusable UI components
+│       │   └── admin/    # Admin UI components
+│       ├── context/      # React context providers
+│       ├── pages/        # Application pages
+│       └── services/     # API service modules
+├── data/                # Data directory
+│   └── sample/           # Sample data files
+├── generated_data/      # Output directory for generated data
+├── logs/                # Application logs
+├── output/              # General output directory
+├── sample_data/         # Additional sample data
+├── tests/               # Test suite
+│   ├── integration/     # Integration tests
+│   └── unit/            # Unit tests
+├── uploads/             # Directory for uploaded files
+└── start_app.sh         # Convenience script to start the application
 ```
 
 ## License
