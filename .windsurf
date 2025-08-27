@@ -1,0 +1,16 @@
+Remember that the basic idea for this project is in IDEA.md, the spec is in SPEC.md and the prompt plan, which serves as the implementation plan is in prompt_plan.md. Always read these files to get a good idea about how the implementation is to be carried out. Also, remember that after the implementation, tests need to be written and run successfully before moving on to the next step. Once a step has been implemented, always mark it as done in the prompt_plan.md file.
+
+## Progress Tracking
+
+- The ToDoList.md file is the central location for tracking implementation progress
+- When a step is completed, mark it as done in ToDoList.md by changing `[ ]` to `[x]` for that item
+- When modifying or adding new tasks, update the ToDoList.md file with the changes
+- Add entries to the Changes Log section in ToDoList.md whenever significant modifications are made
+- Use ToDoList.md to quickly understand the current project status when restarting work
+
+## Notes
+
+- Do not start the backend or frontend servers yourself. I will run them with stdout and stderr redirected to saama-data-gen/backend.log and saama-data-gen/frontend/frontend.log. You can read these files to understand what's going on.
+- Whenever the user asks you to commit / push to git, always do it from the project's root directory and never commit or push without first confirming with me.
+- For DataReplicator implementation, use the venv in the project root. For the testing script, use the venv at tests/. Do not use the system Python.
+- The FastAPI backend listens on port 8000, while the React frontend listens on port 3000.
