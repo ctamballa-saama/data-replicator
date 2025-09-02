@@ -114,28 +114,71 @@ export const getGenerationStatus = async (jobId) => {
 
 export const downloadGeneratedData = async (domainName) => {
   try {
-    // Use response type 'blob' for file downloads
     const response = await api.get(`/generation/download/${domainName}`, {
-      responseType: 'blob'
+      responseType: 'blob',
     });
     
-    // Create a URL for the blob data
-    const url = window.URL.createObjectURL(new Blob([response.data]));
+    // Extract filename from Content-Disposition header if available
+    const contentDisposition = response.headers['content-disposition'];
+    let filename = `${domainName}.csv`; // Default filename
     
-    // Create a temporary link element
+    if (contentDisposition) {
+      const filenameMatch = contentDisposition.match(/filename="(.+)"/i);
+      if (filenameMatch && filenameMatch[1]) {
+        filename = filenameMatch[1];
+      }
+    }
+    
+    // Create a blob URL and trigger download
+    const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `${domainName}_data.csv`);
-    
-    // Append to body, click to download, and clean up
+    link.setAttribute('download', filename);
     document.body.appendChild(link);
     link.click();
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(link);
-    
+    link.remove();
     return true;
   } catch (error) {
-    console.error(`Failed to download generated data for domain ${domainName}:`, error);
+    console.error(`Failed to download generated data for ${domainName}:`, error);
+    throw error;
+  }
+};
+
+// Validation endpoints
+export const getValidators = async () => {
+  try {
+    const response = await api.get('/validation/validators');
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch validators:', error);
+    throw error;
+  }
+};
+
+export const getValidationRules = async (validatorId = null) => {
+  try {
+    let url = '/validation/rules';
+    if (validatorId) {
+      url += `?validator_id=${validatorId}`;
+    }
+    const response = await api.get(url);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch validation rules:', error);
+    throw error;
+  }
+};
+
+export const validateDomain = async (domainName, validatorIds = null) => {
+  try {
+    const payload = {
+      domain_name: domainName,
+      validator_ids: validatorIds
+    };
+    const response = await api.post('/validation/validate', payload);
+    return response.data;
+  } catch (error) {
+    console.error(`Failed to validate domain ${domainName}:`, error);
     throw error;
   }
 };

@@ -16,6 +16,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import AnalyticsIcon from '@mui/icons-material/Analytics';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import InfoIcon from '@mui/icons-material/Info';
 
 const drawerWidth = 240;
@@ -25,7 +26,8 @@ const menuItems = [
   { text: 'Data Ingestion', path: '/data-ingestion', icon: <CloudUploadIcon /> },
   { text: 'Data Analysis', path: '/data-analysis', icon: <AnalyticsIcon /> },
   { text: 'Data Generation', path: '/data-generation', icon: <AutoFixHighIcon /> },
-  { text: 'Relationships', path: '/relationships', icon: <AccountTreeIcon /> }
+  { text: 'Relationships', path: '/relationships', icon: <AccountTreeIcon /> },
+  { text: 'Validation', path: '/validation', icon: <VerifiedIcon /> }
 ];
 
 const Navigation = () => {

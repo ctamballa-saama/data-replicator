@@ -48,8 +48,8 @@ This document tracks the implementation progress of the DataReplicator project a
   - ✓ Implement domain-specific validation
   - ✓ Create a domain factory
   - ✓ Write domain unit tests
-  - Create factory pattern
-  - Write tests
+  - ⚠ Create factory pattern (partially implemented)
+  - ⚠ Write additional tests for factory pattern
 
 - [x] **Step 5: Data Ingestion Service**
   - ✓ Create DataIngestionService class
@@ -122,7 +122,7 @@ This document tracks the implementation progress of the DataReplicator project a
   - ✓ Implement database connection management
   - ✓ Create repository pattern implementation
   - ✓ Create Pydantic schemas
-  - Write tests
+  - ⚠ Write comprehensive ORM and repository tests
 
 ## API Development
 
@@ -138,12 +138,12 @@ This document tracks the implementation progress of the DataReplicator project a
   - ✓ Implement auth endpoints
   - ✓ Create permission dependencies
   - ✓ Update application with auth router
-  - ✓ Write tests
+  - ✓ Write basic authentication tests
   - ✓ Implement mock authentication for development
     - ✓ Admin credentials: admin@datareplicator.com/admin123, admin/password
     - ✓ User credentials: user@datareplicator.com/user123, dev/dev
   - ✓ Configure protected routes with authentication
-  - Write tests for role-based access control
+  - ⚠ Write tests for role-based access control
 
 - [x] **Step 16: Data Ingestion API**
   - ✓ Create file upload endpoints
@@ -175,7 +175,7 @@ This document tracks the implementation progress of the DataReplicator project a
   - ✓ Create authentication components
   - ✓ Create authentication pages
   - ✓ Implement protected routes
-  - Write tests
+  - ⚠ Write tests for authentication components
 
 - [x] **Step 20: Data Upload and Project UI**
   - ✓ Implement data API client
@@ -217,7 +217,7 @@ This document tracks the implementation progress of the DataReplicator project a
   - ✓ Create AdminLayout with navigation
   - ✓ Implement protected routes with authentication
   - ✓ Create settings forms
-  - Write tests
+  - ⚠ Write tests for admin components
 
 - [ ] **Step 24: API Integration and Deployment**
   - Create environment configurations
@@ -276,3 +276,5 @@ This section tracks modifications to the original plan:
 - 2025-08-27: Completed Step 13 - Database Models and ORM with SQLAlchemy
 - 2025-08-27: Completed Step 19 - Authentication UI with React components
 - 2025-08-27: Completed Step 23 - Admin UI components (Dashboard, User/Domain/Job Management)
+- 2025-08-27: Updated ToDoList to accurately reflect partially completed work
+- 2025-08-27: Started implementation of Step 11 - Validation Framework

@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
+import { SnackbarProvider } from 'notistack';
 
 // Auth Context
 import { AuthProvider, useAuth } from './context/AuthContext';
@@ -16,6 +17,7 @@ import DataAnalysis from './pages/DataAnalysis';
 import DataGeneration from './pages/DataGeneration';
 import RelationshipView from './pages/RelationshipView';
 import DomainDetails from './pages/DomainDetails';
+import ValidationPage from './pages/ValidationPage';
 import Login from './components/auth/Login';
 import AdminPage from './pages/AdminPage';
 
@@ -84,6 +86,7 @@ function App() {
   return (
     <AuthProvider>
       <ThemeProvider theme={theme}>
+        <SnackbarProvider maxSnack={3}>
         <CssBaseline />
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -144,9 +147,19 @@ function App() {
             </ProtectedRoute>
           } />
           
+          {/* Validation route */}
+          <Route path="/validation" element={
+            <ProtectedRoute>
+              <MainLayout>
+                <ValidationPage />
+              </MainLayout>
+            </ProtectedRoute>
+          } />
+          
           {/* Redirect all other routes to dashboard */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </SnackbarProvider>
       </ThemeProvider>
     </AuthProvider>
   );

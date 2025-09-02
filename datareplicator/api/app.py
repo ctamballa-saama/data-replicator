@@ -22,6 +22,7 @@ from datareplicator.ingestion.ingestion_service import ingestion_service
 from datareplicator.analysis.statistics import stats_service
 from datareplicator.analysis.relationships import relationship_service
 from datareplicator.generation.service import GenerationService
+from datareplicator.validation.service import validation_service
 
 # Initialize the generation service
 generation_service = GenerationService()
@@ -148,6 +149,42 @@ class GenerationStatusResponse(BaseModel):
     record_count: Optional[int] = Field(None, description="Number of records generated")
     quality_score: Optional[float] = Field(None, description="Quality score of generated data")
     error_message: Optional[str] = Field(None, description="Error message if failed")
+
+
+class ValidationRuleInfo(BaseModel):
+    rule_id: str = Field(..., description="Unique identifier for the validation rule")
+    description: str = Field(..., description="Human-readable description of the rule")
+    severity: str = Field(..., description="Severity level (ERROR, WARNING, INFO)")
+
+
+class ValidatorInfo(BaseModel):
+    id: str = Field(..., description="Validator identifier")
+    name: str = Field(..., description="Validator name")
+    description: str = Field(..., description="Validator description")
+
+
+class ValidationResultInfo(BaseModel):
+    is_valid: bool = Field(..., description="Whether the validation passed")
+    rule_id: str = Field(..., description="Rule identifier")
+    rule_description: str = Field(..., description="Rule description")
+    field_name: Optional[str] = Field(None, description="Field that failed validation")
+    error_message: Optional[str] = Field(None, description="Detailed error message")
+    row_index: Optional[int] = Field(None, description="Row index where validation failed")
+    severity: str = Field(..., description="Severity level")
+
+
+class ValidationRequest(BaseModel):
+    domain_name: str = Field(..., description="Domain name to validate")
+    validator_ids: Optional[List[str]] = Field(None, description="Specific validators to use (default: all)")
+
+
+class ValidationResponse(BaseModel):
+    domain_name: str = Field(..., description="Domain name")
+    is_valid: bool = Field(..., description="Whether validation passed overall")
+    error_count: int = Field(..., description="Number of validation errors")
+    warning_count: int = Field(..., description="Number of validation warnings")
+    info_count: int = Field(..., description="Number of validation info messages")
+    results: List[ValidationResultInfo] = Field(..., description="Validation results")
 
 # Root endpoint
 @app.get("/", tags=["root"], include_in_schema=True)
@@ -580,6 +617,84 @@ async def get_relationships():
         logger.error(f"Error analyzing relationships: {str(e)}")
         # Return empty list instead of failing
         return []
+
+# Validation endpoints
+@app.get("/validation/validators", response_model=List[ValidatorInfo], tags=["validation"])
+async def list_validators():
+    """
+    List all available validators.
+    
+    Returns a list of validators that can be used to validate domains.
+    """
+    try:
+        validators = validation_service.list_validators()
+        return validators
+    except Exception as e:
+        logger.error(f"Error listing validators: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error listing validators: {str(e)}")
+
+
+@app.get("/validation/rules", response_model=List[ValidationRuleInfo], tags=["validation"])
+async def list_validation_rules(validator_id: Optional[str] = Query(None, description="Optional validator ID to filter rules")):
+    """
+    List all available validation rules.
+    
+    Returns a list of validation rules that can be applied to domains.
+    Optionally filter by validator ID.
+    """
+    try:
+        rules = validation_service.list_rules(validator_id)
+        return rules
+    except ValueError as ve:
+        logger.error(f"Value error listing rules: {str(ve)}")
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        logger.error(f"Error listing rules: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error listing rules: {str(e)}")
+
+
+@app.post("/validation/validate", response_model=ValidationResponse, tags=["validation"])
+async def validate_domain(request: ValidationRequest):
+    """
+    Validate a domain against CDISC standards and custom rules.
+    
+    Returns a validation summary with all validation results.
+    """
+    try:
+        # Check if domain exists
+        domain_name = request.domain_name
+        domain = domain_registry.get_domain(domain_name)
+        if domain is None:
+            raise HTTPException(status_code=404, detail=f"Domain '{domain_name}' not found")
+        
+        # Get domain data
+        domain_data = domain.get_data()
+        
+        # Run validation
+        summary = validation_service.validate_domain(
+            domain_data=domain_data,
+            domain_name=domain_name,
+            validator_ids=request.validator_ids
+        )
+        
+        # Convert to response model
+        response = {
+            "domain_name": summary.domain_name,
+            "is_valid": summary.is_valid,
+            "error_count": summary.error_count,
+            "warning_count": summary.warning_count,
+            "info_count": summary.info_count,
+            "results": [result.to_dict() for result in summary.results]
+        }
+        
+        return response
+    except HTTPException:
+        # Re-raise HTTP exceptions
+        raise
+    except Exception as e:
+        logger.error(f"Error validating domain {request.domain_name}: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error validating domain: {str(e)}")
+
 
 # Generation endpoints
 @app.post("/generation/generate", response_model=GenerationStatusResponse)
